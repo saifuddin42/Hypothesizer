@@ -9,13 +9,15 @@ import Button from '@material-ui/core/Button';
 // import Spinner from 'react-bootstrap/Spinner';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import ListGroup from 'react-bootstrap/ListGroup';
-// import List from '@material-ui/core/List';
-// import ListItem from '@material-ui/core/ListItem';
+// import ListGroup from 'react-bootstrap/ListGroup';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
-import Form from 'react-bootstrap/Form';
+// import Form from 'react-bootstrap/Form';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 import Videocam from '@material-ui/icons/Videocam';
 import Modal from 'react-bootstrap/Modal'
@@ -111,16 +113,16 @@ function App() {
         <h6>A debugging tool</h6>
       </div>
       <div className="App-body">
-        <Form>
-          <Form.Group controlId="exampleForm.ControlTextarea1">
+        <FormControl>
+          <FormGroup controlId="exampleForm.ControlTextarea1">
             {newUI ? <Form.Label style={{ fontSize: 18 }}>Enter in the same description you entered when initially using the tool.</Form.Label> : 
             <Form.Label style={{ fontSize: 18 }}>Describe the defect generally.</Form.Label>}
             <Form.Control as="textarea" onChange={collectDescription} />
             <Form.Text className="text-muted" style={{fontSize: 12}}> 
             {showTags ? <p>Tags: {tags.map<React.ReactNode>(t => <span>{t}</span>).reduce((prev, curr) => [prev, ', ', curr])}</p> : <p></p>}
             </Form.Text>
-          </Form.Group>
-        </Form>
+          </FormGroup>
+        </FormControl>
         {newUI ? <p style={{ fontSize: 18 }}> Please click record and reproduce the defect in the same way that you did when initially using the tool. </p> : 
         <p style={{ fontSize: 18 }}> Please click record and reproduce the defect. </p>}
       </div>
@@ -137,19 +139,19 @@ function App() {
             {hypothesizerState === "analyzing" && <div className="center"> <br></br> <CircularProgress /> {/*<Spinner animation="border" />*/} </div>}
             {hypothesizerState === "idle" && (results?.length! > 0) && 
               <div> 
-                <ListGroup>
-                  {results!.map(entry => <ListGroup.Item> {ReactHtmlParser("<strong>Hypothesis</strong>: " + 
+                <List component="nav">
+                  {results!.map(entry => <ListItem> {ReactHtmlParser("<strong>Hypothesis</strong>: " + 
                 xss(entry.hypothesis) + "<br></br> <strong>Confidence: </strong>" + entry.confidence)}
                 <br/>
-                <Button onClick={() => removeHypothesis(entry)} variant="outlined" color="secondary"> Remove </Button> </ListGroup.Item>)} 
-                </ListGroup>
+                <Button onClick={() => removeHypothesis(entry)} variant="outlined" color="secondary"> Remove </Button> </ListItem>)} 
+                </List>
               </div>
             }
             {hypothesizerState === "idle" && (results?.length! === 0) && 
               <div> 
-                <ListGroup>
-                  <ListGroup.Item> Hypothesizer was unable to find any potential hypotheses. You can try changing your description or <a href='javascript:;' onClick={resetAndShowNewUI}>notifying</a> Hypothesizer once you have fixed your issue.</ListGroup.Item>
-                </ListGroup>
+                <List>
+                  <ListItem> Hypothesizer was unable to find any potential hypotheses. You can try changing your description or <a href='javascript:;' onClick={resetAndShowNewUI}>notifying</a> Hypothesizer once you have fixed your issue.</ListItem>
+                </List>
               </div>
             }
             <br></br>
@@ -157,9 +159,9 @@ function App() {
             {hypothesizerState === "analyzing" && <div className="center"> <br></br> <CircularProgress />{/*<Spinner animation="border" />*/} </div>}
             {hypothesizerState === "idle" && 
               <div>
-                <ListGroup>
-                  {trace!.map(text => <ListGroup.Item dangerouslySetInnerHTML={{__html: xss(text)}}></ListGroup.Item>)}
-                </ListGroup>
+                <List>
+                  {trace!.map(text => <ListItem dangerouslySetInnerHTML={{__html: xss(text)}}></ListItem>)}
+                </List>
               </div>
             }  
           </Modal.Body>
